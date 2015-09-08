@@ -29,16 +29,18 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        float horizontal, vertical;
+        float horizontal, vertical, leftTrigger, rightTrigger;
         bool jump;
-        ReadPlayerInput(out horizontal, out vertical, out jump);
+        ReadPlayerInput(out horizontal, out vertical, out leftTrigger, out rightTrigger, out jump);
         actor.PerformActions(horizontal, vertical, jump);
     }
 
-    private void ReadPlayerInput(out float horizontal, out float vertical, out bool jump)
+    private void ReadPlayerInput(out float horizontal, out float vertical, out float leftTrigger, out float rightTrigger, out bool jump)
     {
         horizontal = Input.GetAxis("Horizontal_P" + playerId);
         vertical = Input.GetAxis("Vertical_P" + playerId);
+        leftTrigger = Input.GetAxis("Left_Trigger_P" + playerId);
+        rightTrigger = Input.GetAxis("Right_Trigger_P" + playerId);
         jump = Input.GetButton("Jump_P" + playerId);
     }
 }

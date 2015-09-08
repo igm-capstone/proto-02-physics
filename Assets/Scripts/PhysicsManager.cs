@@ -5,7 +5,9 @@ public class PhysicsManager : MonoBehaviour
 {
     [SerializeField]
     private float changeValue;
+    [SerializeField]
     private float minMass;
+    [SerializeField]
     private float maxMass;
     private float currentMass;
     private PhysicMaterial playerPhyscMat;
@@ -21,7 +23,8 @@ public class PhysicsManager : MonoBehaviour
     //access the mass from rigidbody
     public void changeMass(float triggerValue)
     {
-        currentMass = changeValue * triggerValue;
+        if(currentMass < maxMass && currentMass > minMass)
+            currentMass = changeValue * triggerValue;
     }
     
     //access physics mat

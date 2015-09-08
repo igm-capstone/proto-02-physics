@@ -40,9 +40,5 @@ public class PlayerController : MonoBehaviour
         horizontal = Input.GetAxis("Horizontal_P" + playerId);
         vertical = Input.GetAxis("Vertical_P" + playerId);
         jump = Input.GetButton("Jump_P" + playerId);
-        if (jump)
-        {
-            Debug.Log("Pressed Jump");
-        }
     }
 }

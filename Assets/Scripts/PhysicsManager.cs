@@ -14,7 +14,7 @@ public class PhysicsManager : MonoBehaviour
 
 	void Start () {
 	    currentMass = gameObject.GetComponent<Rigidbody>().mass;
-        playerPhyscMat = gameObject.GetComponent<BoxCollider>().material;
+        playerPhyscMat = gameObject.GetComponent<CapsuleCollider>().material;
 	}
 	void Update () 
     {

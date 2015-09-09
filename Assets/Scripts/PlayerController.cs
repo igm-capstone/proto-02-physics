@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
         bool jump;
         ReadPlayerInput(out horizontal, out vertical, out leftTrigger, out rightTrigger, out jump);
         actor.PerformActions(horizontal, vertical, jump);
-        animator.Scale(leftTrigger);
+        animator.Scale(rightTrigger);
         physicsmg.changeMass(rightTrigger);
         physicsmg.changeBounciness(leftTrigger);
     }

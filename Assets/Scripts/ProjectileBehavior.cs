@@ -4,7 +4,7 @@ using System.Collections;
 public class ProjectileBehavior : MonoBehaviour {
 
     // Time to self destruct
-    public float projDestroyTime = 1.0f;
+    public float projDestroyTime = 3.0f;
 
     // Use this for initialization
     void Start ()

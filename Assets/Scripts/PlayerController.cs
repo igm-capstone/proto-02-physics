@@ -18,13 +18,17 @@ public class PlayerController : MonoBehaviour
     int availablePlaybacks = 0;
 
     ActorBehaviour actor;
+    PlayerAnimationBehavior animator;
+    PhysicsManager physicsmg;
 
     Vector3 currentVelocity;
 
     public void Awake()
     {
+        animator = GetComponent<PlayerAnimationBehavior>();
         actor = GetComponent<ActorBehaviour>();
         actor.setSpeed(speed);
+        physicsmg = GetComponent<PhysicsManager>();
     }
 
     public void Update()
@@ -33,6 +37,9 @@ public class PlayerController : MonoBehaviour
         bool jump;
         ReadPlayerInput(out horizontal, out vertical, out leftTrigger, out rightTrigger, out jump);
         actor.PerformActions(horizontal, vertical, jump);
+        animator.Scale(leftTrigger);
+        physicsmg.changeMass(rightTrigger);
+        physicsmg.changeBounciness(leftTrigger);
     }
 
     private void ReadPlayerInput(out float horizontal, out float vertical, out float leftTrigger, out float rightTrigger, out bool jump)

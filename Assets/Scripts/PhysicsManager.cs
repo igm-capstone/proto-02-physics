@@ -16,15 +16,15 @@ public class PhysicsManager : MonoBehaviour
 	    currentMass = gameObject.GetComponent<Rigidbody>().mass;
         playerPhyscMat = gameObject.GetComponent<BoxCollider>().material;
 	}
-	void Update () {
+	void Update () 
+    {
 
-	}
+    }
 
     //access the mass from rigidbody
     public void changeMass(float triggerValue)
     {
-        if(currentMass < maxMass && currentMass > minMass)
-            currentMass = changeValue * triggerValue;
+        gameObject.GetComponent<Rigidbody>().mass = Mathf.Lerp(minMass, maxMass, triggerValue);
     }
     
     //access physics mat

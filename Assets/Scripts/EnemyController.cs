@@ -3,24 +3,43 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
-    public int rotationSpeed = 3;
+    // Rotation Variables
+    public float rotationSpeed = 3;
     Transform myTransform;
     Transform plyrTransform;
     Vector3 lookDir;
 
+    //Projectile Variables
+    public GameObject projecPrefab;
+    Transform projSpawnPoint;
+    public float projSpeed = 20.0f;
+    public float ProjWaitTime = 0.1f;
+    public int projPerWave = 10;
+    public float WaveWaitTime = 1;
+
+
+
     // Use this for initialization
-	void Start ()
+    void Start ()
     {
         // Reference owen transform
         myTransform = this.transform;
         
         //Find Player Transform
         plyrTransform = GameObject.FindWithTag("Player").transform;
+
+        // Get Spawn point position
+        projSpawnPoint = transform.FindChild("ProjSpawn").transform;
+
+
+        // Starts Firing Coroutine
+        StartCoroutine(fireWave());
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        #region Player Tracking
         // Calculates the Look at position.
         lookDir = plyrTransform.position - myTransform.position;
 
@@ -28,12 +47,36 @@ public class EnemyController : MonoBehaviour {
         lookDir.y = 0;
 
         // Draws Line from enemy position to the player.
-        Debug.DrawLine(myTransform.position, plyrTransform.position, Color.green);
+        //Debug.DrawLine(myTransform.position, plyrTransform.position, Color.green);
 
         //Rotate towards the Look At position
         myTransform.rotation = Quaternion.Slerp(myTransform.rotation, Quaternion.LookRotation(lookDir), rotationSpeed * Time.deltaTime);
 
+        // Updates Spawn Point Rotation
+        projSpawnPoint.rotation = Quaternion.Slerp(projSpawnPoint.rotation, Quaternion.LookRotation(lookDir), rotationSpeed * Time.deltaTime);
+
+        #endregion
+
+    }
 
 
-	}
+    // Fire Wave of Bullets
+    IEnumerator fireWave()
+    {
+        // Wait and then start spawining the bullet waves.
+        yield return new WaitForSeconds(WaveWaitTime);
+        for (int i = 0; i < projPerWave; i++)
+        {
+            // Wait and then spawn one Bullet
+            yield return new WaitForSeconds(ProjWaitTime);
+            GameObject Projectile = (GameObject)Instantiate(projecPrefab, projSpawnPoint.position, Quaternion.identity);
+
+            // Fires projectile.
+            Projectile.GetComponent<Rigidbody>().velocity = myTransform.forward* projSpeed;
+        }
+
+        // Restarts coroutine to keep the enemy firing at the player.
+        StartCoroutine(fireWave());
+    }
+
 }

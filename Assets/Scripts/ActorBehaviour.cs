@@ -82,33 +82,6 @@ public class ActorBehaviour : MonoBehaviour
         }
 
     }
-
-    public void OnCollisionStay(Collision collision)
-    {
-        Debug.Log("STAY");
-        //if (collision.transform.tag == "Platform")
-        //{
-
-        //    // is only grounded if touched the ground from the top (positive normal y component)
-        //    foreach (var contact in collision.contacts)
-        //    {
-        //        if (contact.normal.y > 0)
-        //        {
-        //            isGrounded = true;
-        //            //break;
-        //        }
-
-        //        if (contact.normal.z != 0)
-        //        {
-        //            something = true;
-        //            //break;
-        //        }
-
-        //        if (something || isGrounded) { break; }
-
-        //    }
-        //}
-    }
     public void OnCollisionExit(Collision collision)
     {
         if (collision.transform.tag == "Platform")
@@ -127,8 +100,15 @@ public class ActorBehaviour : MonoBehaviour
 
         if (Mathf.Abs(horizontal) > Mathf.Epsilon || Mathf.Abs(vertical) > Mathf.Epsilon)
         {
-           transform.localRotation = Quaternion.Euler(0.0f, Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg, 0.0f);
-           velocity = transform.forward * speed;           
+            transform.localRotation = Quaternion.Euler(0.0f, Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg, 0.0f);
+            if (isGrounded)
+            {
+                velocity = transform.forward * speed;
+            }
+            else
+            {
+                rigidbody.AddForce(transform.forward * 8, ForceMode.Impulse);
+            }
         }
         else
         {

@@ -3,9 +3,9 @@ using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(ActorBehaviour))]
+
 public class PlayerController : MonoBehaviour 
 {
-
     [SerializeField]
     [Range(1f, 20f)]
     public float speed = 5;
@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     [Range(1, 2)]
     short playerId = 1;
-    int availablePlaybacks = 0;
 
     ActorBehaviour actor;
     PlayerAnimationBehavior animator;
@@ -35,8 +34,10 @@ public class PlayerController : MonoBehaviour
     {
         float horizontal, vertical, leftTrigger, rightTrigger;
         bool jump;
+
         ReadPlayerInput(out horizontal, out vertical, out leftTrigger, out rightTrigger, out jump);
         actor.PerformActions(horizontal, vertical, jump);
+
         animator.Scale(rightTrigger);
         physicsmg.changeMass(rightTrigger);
         physicsmg.changeBounciness(leftTrigger);

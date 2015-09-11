@@ -18,11 +18,10 @@ public class EnemyController : MonoBehaviour {
     public float WaveWaitTime = 1;
 
 
-
     // Use this for initialization
     void Start ()
     {
-        // Reference owen transform
+        // Reference own transform
         myTransform = this.transform;
         
         //Find Player Transform
@@ -31,8 +30,7 @@ public class EnemyController : MonoBehaviour {
         // Get Spawn point position
         projSpawnPoint = transform.FindChild("ProjSpawn").transform;
 
-
-        // Starts Firing Coroutine
+        // Fire first volley opf bullets.
         StartCoroutine(fireWave());
     }
 	
@@ -54,7 +52,6 @@ public class EnemyController : MonoBehaviour {
 
         // Updates Spawn Point Rotation
         projSpawnPoint.rotation = Quaternion.Slerp(projSpawnPoint.rotation, Quaternion.LookRotation(lookDir), rotationSpeed * Time.deltaTime);
-
         #endregion
 
     }
@@ -63,7 +60,7 @@ public class EnemyController : MonoBehaviour {
     // Fire Wave of Bullets
     IEnumerator fireWave()
     {
-        // Wait and then start spawining the bullet waves.
+        // Wait and then start spawning the bullet waves.
         yield return new WaitForSeconds(WaveWaitTime);
         for (int i = 0; i < projPerWave; i++)
         {
@@ -75,7 +72,7 @@ public class EnemyController : MonoBehaviour {
             Projectile.GetComponent<Rigidbody>().velocity = myTransform.forward* projSpeed;
         }
 
-        // Restarts coroutine to keep the enemy firing at the player.
+        // Starts next volley of bullets
         StartCoroutine(fireWave());
     }
 

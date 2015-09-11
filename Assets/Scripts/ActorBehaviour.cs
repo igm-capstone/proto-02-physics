@@ -31,7 +31,7 @@ public class ActorBehaviour : MonoBehaviour
 
     bool isJumping;
     public bool isGrounded;
-    bool something;
+    bool isHittingOther;
 
     void Awake()
     {
@@ -57,7 +57,6 @@ public class ActorBehaviour : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("ENTER");
         if (collision.transform.tag == "Platform")
         {
 
@@ -72,15 +71,14 @@ public class ActorBehaviour : MonoBehaviour
 
                 if (contact.normal.z != 0)
                 {
-                    something = true;
+                    // Hit something else that is not the Ground, like a Wall or an Enemy.
+                    isHittingOther = true;
                     //break;
                 }
 
-                if (something || isGrounded) { break; }
-
+                if (isHittingOther || isGrounded) { break; }
             }
         }
-
     }
     public void OnCollisionExit(Collision collision)
     {
@@ -92,7 +90,7 @@ public class ActorBehaviour : MonoBehaviour
 
     public void PerformActions(float horizontal, float vertical, bool jump = false)
     {
-        if (something && !isGrounded ) {
+        if (isHittingOther && !isGrounded ) {
             velocity = Vector3.zero;
             return;
 

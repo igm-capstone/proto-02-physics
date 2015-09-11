@@ -57,7 +57,6 @@ public class ActorBehaviour : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("ENTER");
         if (collision.transform.tag == "Platform")
         {
 
@@ -85,7 +84,6 @@ public class ActorBehaviour : MonoBehaviour
 
     public void OnCollisionStay(Collision collision)
     {
-        Debug.Log("STAY");
         //if (collision.transform.tag == "Platform")
         //{
 

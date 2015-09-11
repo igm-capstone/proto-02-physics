@@ -44,8 +44,8 @@ public class PlayerController : MonoBehaviour
 
     private void ReadPlayerInput(out float horizontal, out float vertical, out float leftTrigger, out float rightTrigger, out bool jump)
     {
-        horizontal = Input.GetAxis("Horizontal_P" + playerId);
-        vertical = Input.GetAxis("Vertical_P" + playerId);
+        vertical = Input.GetAxis("Horizontal_P" + playerId);
+        horizontal = -Input.GetAxis("Vertical_P" + playerId);
         leftTrigger = Input.GetAxis("Left_Trigger_P" + playerId);
         rightTrigger = Input.GetAxis("Right_Trigger_P" + playerId);
         jump = Input.GetButton("Jump_P" + playerId);

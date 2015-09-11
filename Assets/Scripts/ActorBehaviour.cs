@@ -30,8 +30,8 @@ public class ActorBehaviour : MonoBehaviour
     float jumpImpulse;
 
     bool isJumping;
-    bool isGrounded;
-
+    public bool isGrounded;
+    bool something;
 
     void Awake()
     {
@@ -55,9 +55,11 @@ public class ActorBehaviour : MonoBehaviour
         rigidbody.velocity = velocity;
     }
 
-    public void OnCollisionStay(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.tag == "Platform") {
+        Debug.Log("ENTER");
+        if (collision.transform.tag == "Platform")
+        {
 
             // is only grounded if touched the ground from the top (positive normal y component)
             foreach (var contact in collision.contacts)
@@ -65,13 +67,48 @@ public class ActorBehaviour : MonoBehaviour
                 if (contact.normal.y > 0)
                 {
                     isGrounded = true;
-                    break;
+                    //break;
                 }
+
+                if (contact.normal.z != 0)
+                {
+                    something = true;
+                    //break;
+                }
+
+                if (something || isGrounded) { break; }
+
             }
         }
 
     }
 
+    public void OnCollisionStay(Collision collision)
+    {
+        Debug.Log("STAY");
+        //if (collision.transform.tag == "Platform")
+        //{
+
+        //    // is only grounded if touched the ground from the top (positive normal y component)
+        //    foreach (var contact in collision.contacts)
+        //    {
+        //        if (contact.normal.y > 0)
+        //        {
+        //            isGrounded = true;
+        //            //break;
+        //        }
+
+        //        if (contact.normal.z != 0)
+        //        {
+        //            something = true;
+        //            //break;
+        //        }
+
+        //        if (something || isGrounded) { break; }
+
+        //    }
+        //}
+    }
     public void OnCollisionExit(Collision collision)
     {
         if (collision.transform.tag == "Platform")
@@ -82,10 +119,16 @@ public class ActorBehaviour : MonoBehaviour
 
     public void PerformActions(float horizontal, float vertical, bool jump = false)
     {
+        if (something && !isGrounded ) {
+            velocity = Vector3.zero;
+            return;
+
+        }
+
         if (Mathf.Abs(horizontal) > Mathf.Epsilon || Mathf.Abs(vertical) > Mathf.Epsilon)
         {
-            transform.localRotation = Quaternion.Euler(0.0f, Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg, 0.0f);
-            velocity = transform.forward * speed;
+           transform.localRotation = Quaternion.Euler(0.0f, Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg, 0.0f);
+           velocity = transform.forward * speed;           
         }
         else
         {

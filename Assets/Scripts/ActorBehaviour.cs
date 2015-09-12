@@ -99,12 +99,12 @@ public class ActorBehaviour : MonoBehaviour
 
         if (Mathf.Abs(horizontal) > Mathf.Epsilon || Mathf.Abs(vertical) > Mathf.Epsilon)
         {
+            // Transform controls to camera space
             GameObject c = GameObject.FindGameObjectWithTag("MainCamera");
             Vector3 v = new Vector3(horizontal, vertical, 0.0f);
             Vector3 r = c.transform.worldToLocalMatrix.MultiplyVector(v);
-            Debug.Log("R " + r);
-             transform.localRotation = Quaternion.Euler(0.0f, Mathf.Atan2(r.y, r.x) * Mathf.Rad2Deg, 0.0f);
-            //     transform.localRotation =  Quaternion.Euler(0.0f, Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg, 0.0f);
+           // transform.localRotation = Quaternion.Euler(0.0f, Mathf.Atan2(r.y, r.x) * Mathf.Rad2Deg, 0.0f);
+            transform.rotation =  Quaternion.Euler(0.0f, Mathf.Atan2(vertical, horizontal) * Mathf.Rad2Deg, 0.0f);
             if (isGrounded)
             {
                 velocity = transform.forward * speed;

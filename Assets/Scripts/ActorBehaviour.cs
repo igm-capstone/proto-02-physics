@@ -69,14 +69,16 @@ public class ActorBehaviour : MonoBehaviour
                     //break;
                 }
 
-                if (contact.normal.z != 0)
+                if (contact.normal.z != 0 || contact.normal.x != 0)
                 {
                     // Hit something else that is not the Ground, like a Wall or an Enemy.
                     isHittingOther = true;
                     //break;
                 }
 
-                if (isHittingOther || isGrounded) { break; }
+                if (isHittingOther || isGrounded) {
+                    Debug.Log("ENTER PLAt");
+                    break; }
             }
         }
     }
@@ -84,6 +86,7 @@ public class ActorBehaviour : MonoBehaviour
     {
         if (collision.transform.tag == "Platform")
         {
+            Debug.Log("EXIT PLAT");
             isGrounded = false;
             isHittingOther = false;
         }

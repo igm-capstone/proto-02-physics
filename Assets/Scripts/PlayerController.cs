@@ -76,7 +76,6 @@ public class PlayerController : MonoBehaviour
     {
         float minZ = camTrigger.gameObject.transform.position.z - camTrigger.bounds.extents.z;
         float boxZPercentage = (transform.position.z - minZ) / (camTrigger.bounds.extents.z * 2.0f);
-        Debug.Log("b " + boxZPercentage);
         mCamera.GetComponent<CameraBehavior>().RotateCamera(90.0f * boxZPercentage);
     }
 }

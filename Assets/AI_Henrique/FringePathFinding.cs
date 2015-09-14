@@ -54,7 +54,16 @@ public class FringePathFinding : MonoBehaviour {
             {
                 Node node = linkedNode.Value;
 
-                Node parent = cache[node];
+                //Node parent = cache[node];
+
+                Node parent;
+
+                if (cache.ContainsKey(node))
+                {
+                    parent = cache[node];
+                }
+                else parent = null;
+
                 int  g = parent != null ? parent.gCost: 0;
 
                 int  f = g + GetNodeDistance(node, targetNode);
@@ -81,8 +90,13 @@ public class FringePathFinding : MonoBehaviour {
                     if (cache[child] != null)
                     {
 
-                        parent = cache[child];
+                        //parent = cache[child];
                         //g_chached = parent.gCost;
+                        if (cache.ContainsKey(child))
+                        {
+                            parent = cache[child];
+                        }
+                        else parent = null;
 
                         // assossiate aprent so we can retrace the path alter, probably wrong
                         parent.ParentNode = child;

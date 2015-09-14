@@ -18,7 +18,7 @@ public class PhysicsManager : MonoBehaviour
     Color HeavyColor;
 
     //UI Variables
-    public Image MassBar, BounceBar;
+    Image MassBar, BounceBar;
 
 
     // Bouncyness

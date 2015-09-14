@@ -22,6 +22,7 @@ public class FringePathFinding : MonoBehaviour {
 
     void Update()
     {
+        // Calls the Pathfinding function every frame
         FindPath(seeker.position, target.position);
     }
 
@@ -32,57 +33,75 @@ public class FringePathFinding : MonoBehaviour {
         Node startNode = nodeGrid.GetNodeFromWorld(startPos);
         Node targetNode = nodeGrid.GetNodeFromWorld(targetPos);
 
-        // Lists for A*
-        List<Node> openSet = new List<Node>();              // List of nodes being evaluated
-        HashSet<Node> closedSet = new HashSet<Node>();      // Chosen nodes for the path that have being looked at.
-        openSet.Add(startNode);
+        // Lists for Fringe Search
+        LinkedList<Node> fringeList = new LinkedList<Node>();   // Fringe List
+        Dictionary<Node, Node> cache = new Dictionary<Node, Node>();          // Chosen nodes for the path that have being looked at.
 
-        // A* loop:
-        while (openSet.Count > 0)
+        // Adds starting Node to list
+        fringeList.AddFirst(startNode);
+
+        cache[startNode] = null;
+
+        int fLimit = GetNodeDistance(startNode, targetNode);
+
+        bool found = false;
+
+        while (!found && fringeList.Count > 0 )
         {
-            Node currentNode = openSet[0];
-            // Look at Node Loop.
-            for (int i=1; i<openSet.Count; i++)
-            {   // Get node with cheaper fCost, in case of tie get node wich cheaper hCost
-                if (openSet[i].fCost < currentNode.fCost || openSet[i].fCost == currentNode.fCost && openSet[i].hCost < currentNode.hCost)
-                {
-                    currentNode = openSet[i];
-                }
-            }
-            openSet.Remove(currentNode);
-            closedSet.Add(currentNode);
+            int fmin = int.MaxValue;
 
-            // Path found
-            if (currentNode == targetNode)
+            for (var linkedNode = fringeList.First ; linkedNode != null;)
             {
-                retraceNodePath(startNode, targetNode);
-                return;
-            }
+                Node node = linkedNode.Value;
 
-            foreach (Node neighbour in nodeGrid.GetNodeNeighbours(currentNode))
-            {
-                // Ignores  UNwalkable neighbours and neighbours already checked.
-                if (!neighbour.isWalkable || closedSet.Contains(neighbour))
+                Node parent = cache[node];
+                int  g = parent != null ? parent.gCost: 0;
+
+                int  f = g + GetNodeDistance(node, targetNode);
+
+                if (f > fLimit)
                 {
+                    fmin = Mathf.Min(f, fmin);
                     continue;
                 }
 
-                int newMovCostToNeighbour = currentNode.gCost + GetNodeDistance(currentNode, neighbour);
-
-                if(newMovCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                if (node == targetNode)
                 {
-                    // Set the neighbour's fCost
-                    neighbour.gCost = newMovCostToNeighbour;
-                    neighbour.hCost = GetNodeDistance(neighbour, targetNode);
-
-                    neighbour.ParentNode = currentNode;
-
-                    if (!openSet.Contains(neighbour))
-                    {
-                        openSet.Add(neighbour);
-                    }
+                    found = true;
+                    break;
                 }
+
+                // Get node children
+                List<Node> children = nodeGrid.GetNodeNeighbours(startNode);
+                children.Reverse();      // reverse to read right to left
+
+                foreach (Node child in children)
+                {
+                    int g_child = g + GetNodeDistance(node, child);
+                    if (cache[child] != null)
+                    {
+
+                        parent = cache[child];
+                        //g_chached = parent.gCost;
+
+                        // assossiate aprent so we can retrace the path alter, probably wrong
+                        parent.ParentNode = child;
+
+                        if (g_child >= parent.gCost)
+                            continue;
+                    }
+
+                    if (fringeList.Contains(child))
+                        fringeList.Remove(child);
+
+                    fringeList.AddAfter(fringeList.Find(child), node);
+
+                    cache[child] = node;
+                    cache[child].gCost = g_child;
+                }
+                fringeList.Remove(node);
             }
+            fLimit = fmin;
         }
     }
 

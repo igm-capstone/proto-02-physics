@@ -49,20 +49,12 @@ public class PlayerController : MonoBehaviour
         animator.Scale(rightTrigger);
         physicsmg.changeMass(rightTrigger);
         physicsmg.changeBounciness(leftTrigger);
-
-        //if (shouldRotateCamera)
-        //{
-        //    float minZ = camTrigger.gameObject.transform.position.z - camTrigger.bounds.extents.z;
-        //    float boxZPercentage = (transform.position.z - minZ) / (camTrigger.bounds.extents.z * 2.0f);
-        //    Debug.Log("b " + boxZPercentage);
-        //    mCamera.GetComponent<CameraBehavior>().RotateCamera(90.0f * boxZPercentage);
-        //}
     }
 
     private void ReadPlayerInput(out float horizontal, out float vertical, out float leftTrigger, out float rightTrigger, out bool jump)
     {
-        vertical = Input.GetAxis("Horizontal_P" + playerId);
-        horizontal = -Input.GetAxis("Vertical_P" + playerId);
+        horizontal = Input.GetAxis("Horizontal_P" + playerId);
+        vertical = -Input.GetAxis("Vertical_P" + playerId);
         leftTrigger = Input.GetAxis("Left_Trigger_P" + playerId);
         rightTrigger = Input.GetAxis("Right_Trigger_P" + playerId);
         jump = Input.GetButton("Jump_P" + playerId);
@@ -84,7 +76,6 @@ public class PlayerController : MonoBehaviour
     {
         float minZ = camTrigger.gameObject.transform.position.z - camTrigger.bounds.extents.z;
         float boxZPercentage = (transform.position.z - minZ) / (camTrigger.bounds.extents.z * 2.0f);
-        Debug.Log("b " + boxZPercentage);
         mCamera.GetComponent<CameraBehavior>().RotateCamera(90.0f * boxZPercentage);
     }
 }

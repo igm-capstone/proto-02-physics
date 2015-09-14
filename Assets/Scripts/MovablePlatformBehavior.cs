@@ -27,6 +27,7 @@ public class MovablePlatformBehavior : MonoBehaviour {
 
 	}
 
+    // Henrique - Note: This should be Collision but when corrected platform only stops fallig if player jumps
     public void OnCollisionEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")

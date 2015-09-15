@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour {
     public float ProjWaitTime = 0.1f;
     public int projPerWave = 10;
     public float WaveWaitTime = 1;
-
+    public float KillAnimationDuration = 0.25f;
 
     // Use this for initialization
     void Start ()
@@ -74,6 +74,38 @@ public class EnemyController : MonoBehaviour {
 
         // Starts next volley of bullets
         StartCoroutine(fireWave());
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "Player")
+        {
+            // is only grounded if touched the ground from the top (positive normal y component)
+            foreach (var contact in collision.contacts)
+            {
+                if (contact.normal.y < 0)
+                {
+                    if (collision.gameObject.GetComponent<Rigidbody>().mass > collision.gameObject.GetComponent<PhysicsManager>().maxMass * 0.75f)
+                    {
+                        StartCoroutine(SquashAndDestroy());
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    IEnumerator SquashAndDestroy()
+    {
+        float startTime = 0.0f;
+        while (transform.localScale.y > 0.0f)
+        {
+            transform.localScale = new Vector3(transform.localScale.x, Mathf.Lerp(1.0f, 0.0f, (startTime/KillAnimationDuration)), transform.localScale.z);
+            startTime += Time.deltaTime;
+            yield return null;
+        }
+
+        GameObject.Destroy(gameObject);
     }
 
 }

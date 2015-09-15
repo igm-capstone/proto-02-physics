@@ -3,7 +3,9 @@ using System.Collections;
 
 public class PlayerAnimationBehavior : MonoBehaviour 
 {
-    
+
+    public float mMinScale = 1.0f;
+    public float mMaxScale = 2.0f;
 	// Use this for initialization
 	void Start () 
     {
@@ -18,8 +20,8 @@ public class PlayerAnimationBehavior : MonoBehaviour
 
     public void Scale(float input)
     {
-        float y = Mathf.Min(1.0f, 2.0f - input);
-        float x = Mathf.Max(0.1f + input, 1.0f);
+        float y = Mathf.Lerp(mMinScale, mMaxScale, input);
+        float x = Mathf.Lerp(mMinScale, mMaxScale, input);
         float z = x;
         transform.localScale = new Vector3(x, y, z);
     }

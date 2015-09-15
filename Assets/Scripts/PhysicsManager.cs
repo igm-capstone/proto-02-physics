@@ -5,10 +5,8 @@ using System.Collections;
 public class PhysicsManager : MonoBehaviour 
 {
     // Mass
-    [SerializeField]
-    private float minMass;
-    [SerializeField]
-    private float maxMass;
+    public float minMass;
+    public float maxMass;
     private float currentMass;
 
     Material plyrMaterial;

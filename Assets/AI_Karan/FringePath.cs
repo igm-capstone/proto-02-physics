@@ -19,7 +19,12 @@ public class FringePath : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             fringePath(source.position, target.position);
+            //GameObject[] spheres = new GameObject[AIarea.GetMaxSize];
+            GameObject path = GameObject.Find("PathSphere");
+
+        }
     }
 
     public void fringePath(Vector3 startPos, Vector3 endPos)
@@ -110,6 +115,15 @@ public class FringePath : MonoBehaviour
             node = node.parent;
         }
         AIarea.fringePath = path;
+
+        foreach (Node_K n in path)
+        {            
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.parent = GameObject.Find("PathSphere").transform;
+            sphere.GetComponent<Renderer>().material.color = Color.black;
+            sphere.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            sphere.transform.position = n.myPos;
+        }
     }
 
     int moveCost(Node_K source, Node_K target)

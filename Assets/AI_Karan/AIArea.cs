@@ -84,32 +84,34 @@ public class AIArea : MonoBehaviour
         
         if (areaOfNodes != null)
         {
-            //Node_K playerNode = getNodeAtPos(player.position);
-            //foreach (Node_K node in areaOfNodes)
-            //{
-            //    if (node.walkable)
-            //    {
-            //        Gizmos.color = Color.green;
-            //        Gizmos.DrawSphere(node.myPos, nodeRadius);
-            //    }
-            //    else
-            //    {
-            //        Gizmos.color = Color.white;
-            //        Gizmos.DrawSphere(node.myPos, nodeRadius);
-            //    }
+            Node_K playerNode = getNodeAtPos(player.position);
+            foreach (Node_K node in areaOfNodes)
+            {
+                if (node.walkable)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawSphere(node.myPos, nodeRadius);
+                }
+                else
+                {
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawSphere(node.myPos, nodeRadius);
+                }
 
-            //    if (node == playerNode)
-            //    {
-            //        Gizmos.color = Color.black;
-            //        Gizmos.DrawSphere(node.myPos, nodeRadius);
-            //    }
-            //}
+                if (node == playerNode)
+                {
+                    Gizmos.color = Color.black;
+                    Gizmos.DrawSphere(node.myPos, nodeRadius);
+                }
+            }
 
             if (fringePath.Count > 0)
             {
                 Gizmos.color = Color.black;
                 foreach (Node_K n in fringePath)
-                    Gizmos.DrawSphere(n.myPos, nodeRadius);
+                {
+                    //Gizmos.DrawSphere(n.myPos, nodeRadius);
+                }
             }
 
             if (aStarPath.Count > 0)

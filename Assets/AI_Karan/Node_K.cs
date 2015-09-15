@@ -10,11 +10,17 @@ public class Node_K : IHeapObj<Node_K>
     private int gC, hC, xCoord, zCoord, hIndex;
     private Node_K nodeParent;
 
-    public Node_K(Vector3 _myPosition, bool _canWalk, Vector2 _coord)
+    public Node_K(Vector3 _myPosition, bool _canWalk, Vector2 _coord, int _myCost)
     {
         myPosition = _myPosition;
         canWalk = _canWalk;
         coord = _coord;
+        myCost = _myCost;
+    }
+
+    public int nodeCost
+    {
+        get { return myCost; }
     }
 
     public Vector3 myPos

@@ -33,7 +33,10 @@ public class AIArea : MonoBehaviour
             {
                 Vector3 nodePos = startingCorner + new Vector3((nodeRadius * 2) * x + nodeRadius, 0.1f, (nodeRadius * 2) * z + nodeRadius);
                 bool canWalk = !Physics.CheckSphere(nodePos, nodeRadius, obstacle);
-                areaOfNodes[x,z] = new Node_K(nodePos, canWalk, new Vector2(x,z));
+                if(canWalk)
+                    areaOfNodes[x,z] = new Node_K(nodePos, canWalk, new Vector2(x,z),1);
+                else
+                    areaOfNodes[x, z] = new Node_K(nodePos, canWalk, new Vector2(x, z),10000);
             }
         }
     }
@@ -71,7 +74,8 @@ public class AIArea : MonoBehaviour
         return neighborNodes;
     }
 
-    public List<Node_K> path = new List<Node_K>();
+    public List<Node_K> aStarPath = new List<Node_K>();
+    public LinkedList<Node_K> fringePath = new LinkedList<Node_K>();
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -101,10 +105,17 @@ public class AIArea : MonoBehaviour
             //    }
             //}
 
-            if (path.Count > 0)
+            if (fringePath.Count > 0)
             {
                 Gizmos.color = Color.black;
-                foreach (Node_K n in path)
+                foreach (Node_K n in fringePath)
+                    Gizmos.DrawSphere(n.myPos, nodeRadius);
+            }
+
+            if (aStarPath.Count > 0)
+            {
+                Gizmos.color = Color.black;
+                foreach (Node_K n in aStarPath)
                     Gizmos.DrawSphere(n.myPos, nodeRadius);
             }
         }

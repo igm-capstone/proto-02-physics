@@ -19,7 +19,7 @@ public class AStarPath : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space))
             aStar(source.position, target.position);
     }
 
@@ -54,7 +54,7 @@ public class AStarPath : MonoBehaviour
             {
                 reversePath(sourceNode, targetNode);
                 watch.Stop();
-                print(watch.ElapsedMilliseconds + "ms");
+                print("Astar " + watch.ElapsedMilliseconds + "ms");
                 return;
             }
 
@@ -96,7 +96,7 @@ public class AStarPath : MonoBehaviour
         //{
         //    print("path " + i + revPath[i].myPos);
         //}
-        AIarea.path = revPath;
+        AIarea.aStarPath = revPath;
     }
 
     int moveCost(Node_K source, Node_K target)

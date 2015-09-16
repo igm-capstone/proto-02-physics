@@ -11,6 +11,7 @@ public class AStarPath : MonoBehaviour
     public LayerMask AILayer;
     public Transform source, target;
     private List<Node_K> path = new List<Node_K>();
+    public string time = "";
 
     void Start()
     {
@@ -54,6 +55,7 @@ public class AStarPath : MonoBehaviour
             {
                 reversePath(sourceNode, targetNode);
                 watch.Stop();
+                time = watch.ElapsedMilliseconds.ToString();
                 print("Astar " + watch.ElapsedMilliseconds + "ms");
                 return;
             }
@@ -92,10 +94,22 @@ public class AStarPath : MonoBehaviour
         }
         revPath.Reverse();
 
-        //for (int i = 0; i < revPath.Count; i++)
-        //{
-        //    print("path " + i + revPath[i].myPos);
-        //}
+        GameObject spherePath = GameObject.Find("SpherePathAStar");
+        if (spherePath.transform.FindChild("sphere"))
+        {
+            foreach (Transform child in spherePath.transform)
+                Destroy(child.gameObject);
+        }
+
+        foreach (Node_K n in revPath)
+        {
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.layer = LayerMask.NameToLayer("red");
+            sphere.transform.parent = spherePath.transform;
+            sphere.GetComponent<Renderer>().material.color = Color.red;
+            sphere.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            sphere.transform.position = n.myPos;
+        }
         AIarea.aStarPath = revPath;
     }
 

@@ -32,7 +32,7 @@ public class Grid : MonoBehaviour {
         nodesInY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
 
         //Creates the Node Grid
-        CreateGrid();
+        CreateGrid();       // Called on Update so that the grid updates when walls change.
     }
 
 
@@ -102,13 +102,14 @@ public class Grid : MonoBehaviour {
 
                 // Test if test node is inside the grid
                 if (CheckX >=0 && CheckX < nodesInX && CheckY >= 0 && CheckY < nodesInY)
+
                     // If around and inside the grid, add to the list
                     Neighbours.Add(nodeGrid[CheckX, CheckY]);
             }
         }
         return Neighbours;
     }
-
+    
     // Draw Visualization gizmos.
     void OnDrawGizmos()
     {
@@ -138,6 +139,5 @@ public class Grid : MonoBehaviour {
             }
         }
 
-    }
-   
+    }   
 }

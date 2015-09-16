@@ -23,7 +23,7 @@ public class FringePathFinding : MonoBehaviour {
     void Update()
     {
         // Calls the Pathfinding function every frame
-        FindPath(seeker.position, target.position);
+        if(Input.GetKeyDown(KeyCode.Space))FindPath(seeker.position, target.position);
     }
 
     // Finds path between the two positions
@@ -35,42 +35,49 @@ public class FringePathFinding : MonoBehaviour {
 
         // Lists for Fringe Search
         LinkedList<Node> fringeList = new LinkedList<Node>();   // Fringe List
-        Dictionary<Node, Node> cache = new Dictionary<Node, Node>();          // Chosen nodes for the path that have being looked at.
+        //HashSet<Node>  cache = new HashSet<Node>();          // Chosen nodes for the path that have being looked at.
+        Dictionary<Node,Node> cache = new Dictionary<Node, Node>();          // Chosen nodes for the path that have being looked at.
 
         // Adds starting Node to list
         fringeList.AddFirst(startNode);
 
-        cache[startNode] = null;
+        cache.Add(startNode, null);
+
+        //cache[startNode] = null;
 
         int fLimit = GetNodeDistance(startNode, targetNode);
 
         bool found = false;
 
+        int C1 = 1000, C2 = 1000;
+
         while (!found && fringeList.Count > 0 )
         {
+            if (C1-- < 0 || C2 < 0)
+            {
+                Debug.Log("Break 01");
+                break;
+            }
+
             int fmin = int.MaxValue;
 
-            for (var linkedNode = fringeList.First ; linkedNode != null;)
+            for (var linkedNode = fringeList.First;  linkedNode != null;)
             {
+
+                if (C2-- < 0)
+                {
+                    Debug.Log("Break 02");
+                    break;
+                }
+
                 Node node = linkedNode.Value;
 
-                //Node parent = cache[node];
-
-                Node parent;
-
-                if (cache.ContainsKey(node))
-                {
-                    parent = cache[node];
-                }
-                else parent = null;
-
-                int  g = parent != null ? parent.gCost: 0;
-
-                int  f = g + GetNodeDistance(node, targetNode);
+               int  f = node.gCost + GetNodeDistance(node, targetNode);
 
                 if (f > fLimit)
                 {
                     fmin = Mathf.Min(f, fmin);
+                    linkedNode = linkedNode.Next;
                     continue;
                 }
 
@@ -81,62 +88,58 @@ public class FringePathFinding : MonoBehaviour {
                 }
 
                 // Get node children
-                List<Node> children = nodeGrid.GetNodeNeighbours(startNode);
-                children.Reverse();      // reverse to read right to left
+                List<Node> Connections = nodeGrid.GetNodeNeighbours(node);
+                Connections.Reverse();      // reverse to read right to left
 
-                foreach (Node child in children)
+                foreach (Node connection in Connections)
                 {
-                    int g_child = g + GetNodeDistance(node, child);
-                    if (cache[child] != null)
+                    int costConn = node.gCost + GetNodeDistance(node, connection);
+
+                    if (cache.ContainsKey(connection))
                     {
-
-                        //parent = cache[child];
-                        //g_chached = parent.gCost;
-                        if (cache.ContainsKey(child))
+                        if (costConn>= connection.gCost)
                         {
-                            parent = cache[child];
-                        }
-                        else parent = null;
-
-                        // assossiate aprent so we can retrace the path alter, probably wrong
-                        parent.ParentNode = child;
-
-                        if (g_child >= parent.gCost)
                             continue;
+                        }
                     }
 
-                    if (fringeList.Contains(child))
-                        fringeList.Remove(child);
 
-                    fringeList.AddAfter(fringeList.Find(child), node);
+                    var linkedConn = fringeList.Find(connection);
 
-                    cache[child] = node;
-                    cache[child].gCost = g_child;
+                    if (linkedConn != null)
+                    {
+                        fringeList.Remove(linkedConn);
+                        fringeList.AddAfter(fringeList.Find(node), linkedConn);
+                    }
+                    else
+                    {
+                        fringeList.AddAfter(fringeList.Find(node), connection);
+                    }
+
+                    connection.gCost = costConn;
+                    cache.Add(connection, node);
+
+                    
                 }
-                fringeList.Remove(node);
+                var lastNode = linkedNode;
+
+                linkedNode = lastNode.Next;
+
+                fringeList.Remove(lastNode);
             }
             fLimit = fmin;
         }
-    }
 
-    // Returns the path as an ordered list.
-    void retraceNodePath (Node startNode, Node endNode)
-    {
-        List<Node> retracedPath = new List<Node>();
-        Node currentNode = endNode;
+        var path = new List<Node>();
 
-        // Go from end node to start node by going looping through the node's parent
-        while(currentNode != startNode)
+        var pathNode = targetNode;
+        while (pathNode != null)
         {
-            retracedPath.Add(currentNode);
-            currentNode = currentNode.ParentNode;
+            path.Add(pathNode);
+            pathNode = cache[pathNode];
         }
-        // Path gets retraced in reverse inside loop so un-reverse it.
-        retracedPath.Reverse();
 
-        // Draw Path using gizmos
-        nodeGrid.drawnPath = retracedPath;
-        
+        nodeGrid.drawnPath = path;
     }
 
     // Get Distance between two different Nodes

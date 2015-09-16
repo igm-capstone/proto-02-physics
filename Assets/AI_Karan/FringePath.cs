@@ -10,6 +10,7 @@ public class FringePath : MonoBehaviour
     public LayerMask AILayer;
     public Transform source, target;
     private List<Node_K> path = new List<Node_K>();
+    public string time = "";
 
     void Start()
     {
@@ -19,7 +20,9 @@ public class FringePath : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             fringePath(source.position, target.position);
+        }
     }
 
     public void fringePath(Vector3 startPos, Vector3 endPos)
@@ -61,6 +64,7 @@ public class FringePath : MonoBehaviour
                     found = true;
                     createPath(targetNode);
                     watch.Stop();
+                    time = watch.ElapsedMilliseconds.ToString();
                     print("fringe took " + watch.ElapsedMilliseconds + "ms");
                     break;
                 }
@@ -71,25 +75,22 @@ public class FringePath : MonoBehaviour
 
                 foreach (Node_K childNode in fringeNodeChildren)
                 {
-                    //if (childNode.walkable)
-                    //{
-                        int childNodeGCost = fringeNode.gCost + moveCost(fringeNode, childNode) * childNode.nodeCost;
-                        if (cache.ContainsKey(childNode))
-                        {
-                            if (childNodeGCost >= childNode.gCost)
-                                continue;
-                        }
+                    int childNodeGCost = fringeNode.gCost + moveCost(fringeNode, childNode) * childNode.nodeCost;
+                    if (cache.ContainsKey(childNode))
+                    {
+                        if (childNodeGCost >= childNode.gCost)
+                            continue;
+                    }
 
-                        if (fringeList.Contains(childNode))
-                            fringeList.Remove(childNode);
+                    if (fringeList.Contains(childNode))
+                        fringeList.Remove(childNode);
 
-                        fringeList.AddAfter(linkedNode, childNode);
+                    fringeList.AddAfter(linkedNode, childNode);
 
-                        childNode.parent = fringeNode;
-                        childNode.gCost = childNodeGCost;
+                    childNode.parent = fringeNode;
+                    childNode.gCost = childNodeGCost;
 
-                        cache[childNode] = childNode.gCost;
-                    //}
+                    cache[childNode] = childNode.gCost;
                 }
 
                 var lastNode = linkedNode;
@@ -110,6 +111,23 @@ public class FringePath : MonoBehaviour
             node = node.parent;
         }
         AIarea.fringePath = path;
+
+        GameObject spherePath = GameObject.Find("SpherePathFringe");
+        if(spherePath.transform.FindChild("sphere"))
+        {
+            foreach (Transform child in spherePath.transform)
+                Destroy(child.gameObject);
+        }
+
+        foreach (Node_K n in path)
+        {            
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.layer = LayerMask.NameToLayer("black");
+            sphere.transform.parent = spherePath.transform;
+            sphere.GetComponent<Renderer>().material.color = Color.black;
+            sphere.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            sphere.transform.position = n.myPos;
+        }
     }
 
     int moveCost(Node_K source, Node_K target)

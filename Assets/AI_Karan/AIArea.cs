@@ -105,19 +105,21 @@ public class AIArea : MonoBehaviour
             //    }
             //}
 
-            if (fringePath.Count > 0)
-            {
-                Gizmos.color = Color.black;
-                foreach (Node_K n in fringePath)
-                    Gizmos.DrawSphere(n.myPos, nodeRadius);
-            }
+            //if (fringePath.Count > 0)
+            //{
+            //    Gizmos.color = Color.black;
+            //    foreach (Node_K n in fringePath)
+            //    {
+            //        //Gizmos.DrawSphere(n.myPos, nodeRadius);
+            //    }
+            //}
 
-            if (aStarPath.Count > 0)
-            {
-                Gizmos.color = Color.black;
-                foreach (Node_K n in aStarPath)
-                    Gizmos.DrawSphere(n.myPos, nodeRadius);
-            }
+            //if (aStarPath.Count > 0)
+            //{
+            //    Gizmos.color = Color.black;
+            //    foreach (Node_K n in aStarPath)
+            //        Gizmos.DrawSphere(n.myPos, nodeRadius);
+            //}
         }
     }
 

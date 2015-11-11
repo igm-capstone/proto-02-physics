@@ -13,7 +13,10 @@ public class PhysicsManager : MonoBehaviour
     [SerializeField]
     Color LightColor;
     [SerializeField]
-    Color HeavyColor;
+    Color BouncyColor;
+
+
+    SkinnedMeshRenderer skinnedRenderer;
 
     //UI Variables
     Image MassBar, BounceBar;
@@ -25,9 +28,9 @@ public class PhysicsManager : MonoBehaviour
 	void Start ()
     {
 	    currentMass = gameObject.GetComponent<Rigidbody>().mass;
-        playerPhyscMat = gameObject.GetComponent<BoxCollider>().material;
-
-        plyrMaterial = gameObject.GetComponent<Renderer>().material;
+        playerPhyscMat = gameObject.GetComponent<Collider>().material;
+	    skinnedRenderer = gameObject.GetComponent<SkinnedMeshRenderer>();
+        plyrMaterial = skinnedRenderer.material;
 
         // Starting Color
         plyrMaterial.color = LightColor;
@@ -44,7 +47,8 @@ public class PhysicsManager : MonoBehaviour
         // Change Player Mass
         gameObject.GetComponent<Rigidbody>().mass = Mathf.Lerp(minMass, maxMass, triggerValue);
         // Darken player as mass changes.
-        plyrMaterial.color = Color.Lerp(LightColor, HeavyColor, triggerValue);
+        plyrMaterial.SetFloat("_Metallic", triggerValue);
+
         // Fills up Mass UI bar
         MassBar.fillAmount = triggerValue;
 
@@ -53,7 +57,12 @@ public class PhysicsManager : MonoBehaviour
     //access physics mat
     public void changeBounciness(float triggerValue)
     {
-        playerPhyscMat.bounciness = triggerValue;
+        playerPhyscMat.bounciness = Mathf.Clamp(triggerValue, 0, .95f);
+
+        // Darken player as mass changes.
+        plyrMaterial.color = Color.Lerp(LightColor, BouncyColor, triggerValue);
+
+        skinnedRenderer.SetBlendShapeWeight(0, triggerValue * 100);
 
         // Fills up Mass UI bar
         BounceBar.fillAmount = triggerValue;

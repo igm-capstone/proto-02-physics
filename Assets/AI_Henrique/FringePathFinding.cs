@@ -145,11 +145,11 @@ public class FringePathFinding : MonoBehaviour {
     // Get Distance between two different Nodes
     int GetNodeDistance (Node nodeA, Node nodeB)
     {
-        // Calculates Absulotue distance
+        // Calculates Absulotue cameraDistance
         int distX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
         int distY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
 
-        // Check to see which axis-distance is shorter
+        // Check to see which axis-cameraDistance is shorter
         // Equation = Distance = DiagCost*ShortestDist + StraightCos*(LongestDist - ShortestDist)
         if (distX > distY)
             return DiagCost * distY + StraightCost * (distX - distY);
